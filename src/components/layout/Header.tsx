@@ -15,13 +15,13 @@ export function Header() {
   ];
 
   return (
-    <header className="bg-slate-900/95 backdrop-blur-sm sticky top-0 z-50 border-b border-slate-800">
+    <header className="bg-white/95 backdrop-blur-sm sticky top-0 z-50 border-b border-slate-200 shadow-sm">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
               <Video className="h-8 w-8 text-blue-500" />
-              <span className="text-xl font-bold text-white">AI VideoGen</span>
+              <span className="text-xl font-bold text-slate-800">AI VideoGen</span>
             </Link>
           </div>
 
@@ -31,7 +31,7 @@ export function Header() {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-gray-300 hover:text-white transition-colors duration-200"
+                className="text-slate-600 hover:text-slate-800 transition-colors duration-200"
               >
                 {item.name}
               </a>
@@ -65,7 +65,7 @@ export function Header() {
           <div className="md:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-gray-300 hover:text-white"
+              className="text-slate-600 hover:text-slate-800"
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -74,13 +74,13 @@ export function Header() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-800 py-4">
+          <div className="md:hidden border-t border-slate-200 py-4">
             <div className="flex flex-col space-y-4">
               {navigation.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
+                  className="text-slate-600 hover:text-slate-800 transition-colors duration-200"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
