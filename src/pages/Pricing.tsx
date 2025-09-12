@@ -1,6 +1,6 @@
 import React from 'react';
-import { Check, Zap, Crown, Building } from 'lucide-react';
-import { Button } from '../components/ui/Button';
+import { Zap, Crown, Building } from 'lucide-react';
+import { PricingPlan, PricingHeader, PricingFooter } from '../components/pricing';
 
 export function Pricing() {
   const plans = [
@@ -63,75 +63,34 @@ export function Pricing() {
   ];
 
   return (
-    <div className="bg-slate-900 text-white min-h-screen py-24">
+    <div className="bg-background-light text-text-primary min-h-screen py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Simple, transparent pricing
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Choose the perfect plan for your content creation needs. Upgrade or downgrade at any time.
-          </p>
-        </div>
+        <PricingHeader 
+          title="Simple, transparent pricing"
+          description="Choose the perfect plan for your content creation needs. Upgrade or downgrade at any time."
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
-            <div
+            <PricingPlan
               key={index}
-              className={`relative bg-slate-800 rounded-2xl border p-8 ${
-                plan.popular 
-                  ? 'border-blue-500 ring-2 ring-blue-500/20' 
-                  : 'border-slate-700'
-              } hover:border-blue-500/50 transition-all duration-300`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                    Most Popular
-                  </span>
-                </div>
-              )}
-
-              <div className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-500/20 rounded-xl mb-4">
-                  <plan.icon className="w-8 h-8 text-blue-400" />
-                </div>
-                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                <p className="text-gray-400 mb-4">{plan.description}</p>
-                <div className="flex items-baseline justify-center">
-                  <span className="text-4xl font-bold">${plan.price}</span>
-                  <span className="text-gray-400 ml-2">/month</span>
-                </div>
-              </div>
-
-              <ul className="space-y-3 mb-8">
-                {plan.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-start">
-                    <Check className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-300">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Button 
-                className="w-full" 
-                variant={plan.popular ? 'primary' : 'secondary'}
-                size="lg"
-              >
-                {plan.cta}
-              </Button>
-            </div>
+              name={plan.name}
+              price={plan.price}
+              description={plan.description}
+              icon={plan.icon}
+              features={plan.features}
+              cta={plan.cta}
+              popular={plan.popular}
+            />
           ))}
         </div>
 
-        <div className="text-center mt-16">
-          <p className="text-gray-400 mb-4">
-            All plans include a 14-day free trial. No credit card required.
-          </p>
-          <p className="text-sm text-gray-500">
-            Questions? <a href="#" className="text-blue-400 hover:text-blue-300">Contact our sales team</a> for custom enterprise pricing.
-          </p>
-        </div>
+        <PricingFooter 
+          trialText="All plans include a 14-day free trial. No credit card required."
+          contactText="Questions?"
+          contactLinkText="Contact our sales team"
+          contactLinkUrl="#"
+        />
       </div>
     </div>
   );

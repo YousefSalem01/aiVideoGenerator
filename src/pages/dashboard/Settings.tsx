@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   Youtube, 
   Instagram, 
@@ -55,7 +55,7 @@ export function Settings() {
       id: 'tiktok',
       name: 'TikTok',
       icon: Music,
-      color: 'bg-black',
+      color: 'bg-gray-900',
       hoverColor: 'hover:bg-gray-800',
       description: 'Connect to publish TikTok videos',
       connected: false
@@ -75,13 +75,13 @@ export function Settings() {
     toast.success(`${platformName} integration coming soon! 🚀`, {
       duration: 4000,
       style: {
-        background: '#1e293b',
-        color: '#fff',
-        border: '1px solid #334155',
+        background: '#ffffff',
+        color: '#374151',
+        border: '1px solid #e5e7eb',
       },
       iconTheme: {
-        primary: '#3b82f6',
-        secondary: '#fff',
+        primary: '#2563eb',
+        secondary: '#ffffff',
       },
     });
   };
@@ -90,9 +90,9 @@ export function Settings() {
     setNotifications(prev => ({ ...prev, [key]: value }));
     toast.success('Notification preferences updated!', {
       style: {
-        background: '#1e293b',
-        color: '#fff',
-        border: '1px solid #334155',
+        background: '#ffffff',
+        color: '#374151',
+        border: '1px solid #e5e7eb',
       },
     });
   };
@@ -102,12 +102,12 @@ export function Settings() {
       <Toaster position="top-right" />
       
       <div className="flex items-center space-x-3 mb-8">
-        <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
-          <SettingsIcon className="w-5 h-5 text-blue-500" />
+        <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+          <SettingsIcon className="w-5 h-5 text-primary-600" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
-          <p className="text-gray-600 dark:text-gray-400">Manage your account and preferences</p>
+          <h1 className="text-3xl font-bold text-text-primary">Settings</h1>
+          <p className="text-text-secondary">Manage your account and preferences</p>
         </div>
       </div>
 
@@ -116,14 +116,14 @@ export function Settings() {
         <div className="lg:col-span-2 space-y-8">
           {/* Social Media Connections */}
           <Card className="overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+            <CardHeader className="bg-gradient-to-r from-primary-50 to-purple-50">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                  <Globe className="w-4 h-4 text-blue-500" />
+                <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center">
+                  <Globe className="w-4 h-4 text-primary-600" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Social Media Connections</h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Connect your social media accounts to start publishing</p>
+                  <h2 className="text-xl font-semibold text-text-primary">Social Media Connections</h2>
+                  <p className="text-sm text-text-secondary">Connect your social media accounts to start publishing</p>
                 </div>
               </div>
             </CardHeader>
@@ -132,7 +132,7 @@ export function Settings() {
                 {platforms.map((platform) => (
                   <div
                     key={platform.id}
-                    className="group relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-blue-300 dark:hover:border-blue-600"
+                    className="group relative bg-background border border-border rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-primary-300"
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className={`w-12 h-12 ${platform.color} rounded-xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
@@ -145,10 +145,10 @@ export function Settings() {
                       )}
                     </div>
                     
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    <h3 className="text-lg font-semibold text-text-primary mb-2">
                       {platform.name}
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    <p className="text-sm text-text-secondary mb-4">
                       {platform.description}
                     </p>
                     
@@ -169,12 +169,12 @@ export function Settings() {
           <Card>
             <CardHeader>
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <User className="w-4 h-4 text-green-500" />
+                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                  <User className="w-4 h-4 text-green-600" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Profile Information</h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Update your personal information</p>
+                  <h2 className="text-xl font-semibold text-text-primary">Profile Information</h2>
+                  <p className="text-sm text-text-secondary">Update your personal information</p>
                 </div>
               </div>
             </CardHeader>
@@ -194,10 +194,10 @@ export function Settings() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-text-primary mb-2">
                     Timezone
                   </label>
-                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                  <select className="w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-background text-text-primary">
                     <option>UTC-5 (Eastern Time)</option>
                     <option>UTC-8 (Pacific Time)</option>
                     <option>UTC+0 (GMT)</option>
@@ -215,12 +215,12 @@ export function Settings() {
           <Card>
             <CardHeader>
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-red-500" />
+                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                  <Shield className="w-4 h-4 text-red-600" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Security</h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Manage your account security</p>
+                  <h2 className="text-xl font-semibold text-text-primary">Security</h2>
+                  <p className="text-sm text-text-secondary">Manage your account security</p>
                 </div>
               </div>
             </CardHeader>
@@ -250,22 +250,22 @@ export function Settings() {
           <Card>
             <CardHeader>
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-                  <Bell className="w-4 h-4 text-yellow-500" />
+                <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                  <Bell className="w-4 h-4 text-yellow-600" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Notifications</h3>
+                  <h3 className="text-lg font-semibold text-text-primary">Notifications</h3>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               {Object.entries(notifications).map(([key, value]) => (
-                <div key={key} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                <div key={key} className="flex items-center justify-between p-3 bg-surface-light rounded-lg">
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white capitalize">
+                    <p className="text-sm font-medium text-text-primary capitalize">
                       {key === 'marketing' ? 'Marketing Emails' : `${key} Notifications`}
                     </p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                    <p className="text-xs text-text-secondary">
                       {key === 'email' && 'Receive email notifications'}
                       {key === 'push' && 'Receive push notifications'}
                       {key === 'marketing' && 'Receive marketing updates'}
@@ -274,7 +274,7 @@ export function Settings() {
                   <button
                     onClick={() => handleNotificationChange(key, !value)}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      value ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+                      value ? 'bg-primary-600' : 'bg-gray-300'
                     }`}
                   >
                     <span
@@ -292,11 +292,11 @@ export function Settings() {
           <Card>
             <CardHeader>
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                  <Palette className="w-4 h-4 text-purple-500" />
+                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <Palette className="w-4 h-4 text-purple-600" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Quick Actions</h3>
+                  <h3 className="text-lg font-semibold text-text-primary">Quick Actions</h3>
                 </div>
               </div>
             </CardHeader>
@@ -314,21 +314,21 @@ export function Settings() {
           </Card>
 
           {/* Account Stats */}
-          <Card className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-blue-200 dark:border-blue-800">
+          <Card className="bg-gradient-to-br from-primary-50 to-purple-50 border-primary-200">
             <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Account Overview</h3>
+              <h3 className="text-lg font-semibold text-text-primary mb-4">Account Overview</h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Videos Generated</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">24</span>
+                  <span className="text-sm text-text-secondary">Videos Generated</span>
+                  <span className="text-sm font-semibold text-text-primary">24</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Current Plan</span>
-                  <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">Pro</span>
+                  <span className="text-sm text-text-secondary">Current Plan</span>
+                  <span className="text-sm font-semibold text-primary-600">Pro</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Connected Platforms</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">0</span>
+                  <span className="text-sm text-text-secondary">Connected Platforms</span>
+                  <span className="text-sm font-semibold text-text-primary">0</span>
                 </div>
               </div>
             </CardContent>

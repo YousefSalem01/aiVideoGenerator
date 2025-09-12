@@ -19,8 +19,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-background-light flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
@@ -38,8 +38,8 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-background-light flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
@@ -52,11 +52,10 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 }
 
 function AppContent() {
-  const { user } = useAuth();
   
   return (
     <Router>
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="min-h-screen bg-background-light">
         <Routes>
           {/* Public routes with header/footer */}
           <Route path="/" element={
@@ -100,14 +99,14 @@ function AppContent() {
             <Route index element={<Dashboard />} />
             <Route path="posts" element={
               <div className="text-center py-16">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">My Posts</h2>
-                <p className="text-gray-600 dark:text-gray-400">Your generated videos will appear here.</p>
+                <h2 className="text-2xl font-bold text-text-primary mb-4">My Posts</h2>
+                <p className="text-text-secondary">Your generated videos will appear here.</p>
               </div>
             } />
             <Route path="scheduling" element={
               <div className="text-center py-16">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Scheduling</h2>
-                <p className="text-gray-600 dark:text-gray-400">Schedule multiple videos at once.</p>
+                <h2 className="text-2xl font-bold text-text-primary mb-4">Scheduling</h2>
+                <p className="text-text-secondary">Schedule multiple videos at once.</p>
               </div>
             } />
             <Route path="settings" element={
@@ -115,8 +114,8 @@ function AppContent() {
             } />
             <Route path="billing" element={
               <div className="text-center py-16">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Billing</h2>
-                <p className="text-gray-600 dark:text-gray-400">Manage your subscription and billing details.</p>
+                <h2 className="text-2xl font-bold text-text-primary mb-4">Billing</h2>
+                <p className="text-text-secondary">Manage your subscription and billing details.</p>
               </div>
             } />
           </Route>
@@ -124,20 +123,20 @@ function AppContent() {
           {/* Admin routes */}
           <Route path="/admin/users" element={
             <ProtectedRoute>
-              <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
+              <div className="min-h-screen bg-background-light p-8">
                 <div className="text-center py-16">
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">User Management</h2>
-                  <p className="text-gray-600 dark:text-gray-400">Admin panel for managing users.</p>
+                  <h2 className="text-2xl font-bold text-text-primary mb-4">User Management</h2>
+                  <p className="text-text-secondary">Admin panel for managing users.</p>
                 </div>
               </div>
             </ProtectedRoute>
           } />
           <Route path="/admin/usage" element={
             <ProtectedRoute>
-              <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
+              <div className="min-h-screen bg-background-light p-8">
                 <div className="text-center py-16">
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Usage Metrics</h2>
-                  <p className="text-gray-600 dark:text-gray-400">System-wide usage statistics.</p>
+                  <h2 className="text-2xl font-bold text-text-primary mb-4">Usage Metrics</h2>
+                  <p className="text-text-secondary">System-wide usage statistics.</p>
                 </div>
               </div>
             </ProtectedRoute>
