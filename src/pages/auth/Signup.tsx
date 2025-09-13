@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent } from '../../components/ui/Card';
@@ -11,25 +11,23 @@ export function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const { signup, isLoading } = useAuth();
+  const { signup, isLoading, error, clearError } = useAuthStore();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    clearError();
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
       return;
     }
 
     try {
       await signup(email, password, name);
       navigate('/dashboard');
-      } catch (err) {
-      console.error(err);
-      setError('Failed to create account. Please try again.');
+    } catch (err) {
+      console.error('Signup error:', err);
+      // Error is handled by the auth store
     }
   };
 

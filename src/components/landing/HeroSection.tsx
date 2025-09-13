@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Play, ArrowRight, Sparkles, Video } from 'lucide-react';
 import { Button } from '../ui/Button';

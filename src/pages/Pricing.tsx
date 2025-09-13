@@ -1,4 +1,3 @@
-import React from 'react';
 import { Zap, Crown, Building } from 'lucide-react';
 import { PricingPlan, PricingHeader, PricingFooter } from '../components/pricing';
 

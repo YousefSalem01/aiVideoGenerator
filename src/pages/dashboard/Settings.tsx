@@ -14,12 +14,15 @@ import {
   Palette,
   Globe
 } from 'lucide-react';
+import { useAppStore } from '../../stores/appStore';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent, CardHeader } from '../../components/ui/Card';
 import toast, { Toaster } from 'react-hot-toast';
 
 export function Settings() {
+  const { connectedPlatforms, connectPlatform, disconnectPlatform } = useAppStore();
+  
   const [notifications, setNotifications] = useState({
     email: true,
     push: false,
@@ -40,7 +43,7 @@ export function Settings() {
       color: 'bg-red-500',
       hoverColor: 'hover:bg-red-600',
       description: 'Connect to publish YouTube Shorts',
-      connected: false
+      connected: connectedPlatforms.includes('youtube')
     },
     {
       id: 'instagram',
@@ -49,7 +52,7 @@ export function Settings() {
       color: 'bg-gradient-to-r from-purple-500 to-pink-500',
       hoverColor: 'hover:from-purple-600 hover:to-pink-600',
       description: 'Connect to publish Instagram Reels',
-      connected: false
+      connected: connectedPlatforms.includes('instagram')
     },
     {
       id: 'tiktok',
@@ -58,7 +61,7 @@ export function Settings() {
       color: 'bg-gray-900',
       hoverColor: 'hover:bg-gray-800',
       description: 'Connect to publish TikTok videos',
-      connected: false
+      connected: connectedPlatforms.includes('tiktok')
     },
     {
       id: 'facebook',
@@ -67,23 +70,35 @@ export function Settings() {
       color: 'bg-blue-600',
       hoverColor: 'hover:bg-blue-700',
       description: 'Connect to publish Facebook Reels',
-      connected: false
+      connected: connectedPlatforms.includes('facebook')
     }
   ];
 
-  const handleConnect = (platformName: string) => {
-    toast.success(`${platformName} integration coming soon! 🚀`, {
-      duration: 4000,
-      style: {
-        background: '#ffffff',
-        color: '#374151',
-        border: '1px solid #e5e7eb',
-      },
-      iconTheme: {
-        primary: '#2563eb',
-        secondary: '#ffffff',
-      },
-    });
+  const handleConnect = (platformId: string, platformName: string, isConnected: boolean) => {
+    if (isConnected) {
+      disconnectPlatform(platformId);
+      toast.success(`Disconnected from ${platformName}`, {
+        style: {
+          background: '#ffffff',
+          color: '#374151',
+          border: '1px solid #e5e7eb',
+        },
+      });
+    } else {
+      connectPlatform(platformId);
+      toast.success(`Connected to ${platformName}! 🚀`, {
+        duration: 4000,
+        style: {
+          background: '#ffffff',
+          color: '#374151',
+          border: '1px solid #e5e7eb',
+        },
+        iconTheme: {
+          primary: '#2563eb',
+          secondary: '#ffffff',
+        },
+      });
+    }
   };
 
   const handleNotificationChange = (key: string, value: boolean) => {
@@ -153,11 +168,11 @@ export function Settings() {
                     </p>
                     
                     <Button
-                      onClick={() => handleConnect(platform.name)}
+                      onClick={() => handleConnect(platform.id, platform.name, platform.connected)}
                       className={`w-full ${platform.connected ? 'bg-green-500 hover:bg-green-600' : `${platform.color} ${platform.hoverColor}`} text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300`}
                       size="sm"
                     >
-                      {platform.connected ? 'Connected' : 'Connect'}
+                      {platform.connected ? 'Disconnect' : 'Connect'}
                     </Button>
                   </div>
                 ))}
@@ -328,7 +343,7 @@ export function Settings() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-text-secondary">Connected Platforms</span>
-                  <span className="text-sm font-semibold text-text-primary">0</span>
+                  <span className="text-sm font-semibold text-text-primary">{connectedPlatforms.length}</span>
                 </div>
               </div>
             </CardContent>

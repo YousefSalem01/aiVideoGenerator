@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent } from '../../components/ui/Card';
@@ -9,18 +9,18 @@ import { Card, CardContent } from '../../components/ui/Card';
 export function ResetPassword() {
   const [email, setEmail] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState('');
-  const { resetPassword, isLoading } = useAuth();
+  const { resetPassword, isLoading, error, clearError } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    clearError();
 
     try {
       await resetPassword(email);
       setIsSuccess(true);
-    } catch {
-      setError('Failed to send reset email. Please try again.');
+    } catch (err) {
+      console.error('Reset password error:', err);
+      // Error is handled by the auth store
     }
   };
 

@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface PricingHeaderProps {
   title: string;
   description: string;

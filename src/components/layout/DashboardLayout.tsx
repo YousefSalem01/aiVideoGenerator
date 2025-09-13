@@ -10,10 +10,10 @@ import {
   LogOut,
   Video
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuthStore } from '../../stores/authStore';
 
 export function DashboardLayout() {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthStore();
   const location = useLocation();
 
   const navigation = [
@@ -113,7 +113,7 @@ export function DashboardLayout() {
         {/* Main Content */}
         <div className="flex-1 ml-64">
           <main className="p-8">
-            <Outlet />
+            <Outlet /> 
           </main>
         </div>
       </div>

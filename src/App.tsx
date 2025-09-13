@@ -1,7 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { AppProvider } from './contexts/AppContext';
+import { Toaster } from 'react-hot-toast';
+import { useAuthStore } from './stores/authStore';
+import { useAuthInit } from './hooks/useAuthInit';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { DashboardLayout } from './components/layout/DashboardLayout';
@@ -13,9 +14,8 @@ import { ResetPassword } from './pages/auth/ResetPassword';
 import { Dashboard } from './pages/dashboard/Dashboard';
 import { Settings } from './pages/dashboard/Settings';
 
-// Protected Route Component
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading } = useAuthStore();
   
   if (isLoading) {
     return (
@@ -32,9 +32,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-// Public Route Component (redirect to dashboard if logged in)
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading } = useAuthStore();
   
   if (isLoading) {
     return (
@@ -52,12 +51,12 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 }
 
 function AppContent() {
+  useAuthInit();
   
   return (
     <Router>
       <div className="min-h-screen bg-background-light">
         <Routes>
-          {/* Public routes with header/footer */}
           <Route path="/" element={
             <div>
               <Header />
@@ -73,7 +72,6 @@ function AppContent() {
             </div>
           } />
           
-          {/* Auth routes */}
           <Route path="/login" element={
             <PublicRoute>
               <Login />
@@ -90,7 +88,6 @@ function AppContent() {
             </PublicRoute>
           } />
           
-          {/* Protected dashboard routes */}
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <DashboardLayout />
@@ -120,7 +117,6 @@ function AppContent() {
             } />
           </Route>
           
-          {/* Admin routes */}
           <Route path="/admin/users" element={
             <ProtectedRoute>
               <div className="min-h-screen bg-background-light p-8">
@@ -149,11 +145,20 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppProvider>
-        <AppContent />
-      </AppProvider>
-    </AuthProvider>
+    <>
+      <AppContent />
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#ffffff',
+            color: '#374151',
+            border: '1px solid #e5e7eb',
+          },
+        }}
+      />
+    </>
   );
 }
 

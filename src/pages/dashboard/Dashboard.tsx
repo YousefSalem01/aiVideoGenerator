@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Upload, Zap, Settings as SettingsIcon, Play } from 'lucide-react';
-import { useApp } from '../../contexts/AppContext';
+import { useAppStore } from '../../stores/appStore';
 import { Button } from '../../components/ui/Button';
 import { Card, CardContent, CardHeader } from '../../components/ui/Card';
 
 export function Dashboard() {
-  const { connectedPlatforms, addPost } = useApp();
+  const { connectedPlatforms, addPost } = useAppStore();
   const [prompt, setPrompt] = useState('');
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [publishType, setPublishType] = useState<'auto' | 'approval'>('approval');
