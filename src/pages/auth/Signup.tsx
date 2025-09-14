@@ -1,33 +1,51 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
-import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent } from '../../components/ui/Card';
+import toast from 'react-hot-toast';
 
 export function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { signup, isLoading, error, clearError } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    clearError();
 
     if (password.length < 6) {
+      toast.error('Password must be at least 6 characters');
       return;
     }
 
+    setIsLoading(true);
     try {
-      await signup(email, password, name);
-      navigate('/dashboard');
-    } catch (err) {
-      console.error('Signup error:', err);
-      // Error is handled by the auth store
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success('Verification code sent to your email!');
+        // Redirect to email verification with user ID and email
+        navigate(`/verify-email?userId=${data.data.tempUserId}&email=${encodeURIComponent(email)}`);
+      } else {
+        toast.error(data.message || 'Registration failed');
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      toast.error('Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -84,9 +102,6 @@ export function Signup() {
               </button>
             </div>
 
-            {error && (
-              <p className="text-red-500 text-sm text-center">{error}</p>
-            )}
 
             <Button type="submit" className="w-full" size="lg" isLoading={isLoading}>
               Create Account

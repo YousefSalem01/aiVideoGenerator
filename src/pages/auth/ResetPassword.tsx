@@ -1,52 +1,46 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft } from 'lucide-react';
-import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent } from '../../components/ui/Card';
+import toast from 'react-hot-toast';
 
 export function ResetPassword() {
   const [email, setEmail] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false);
-  const { resetPassword, isLoading, error, clearError } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    clearError();
+    setIsLoading(true);
 
     try {
-      await resetPassword(email);
-      setIsSuccess(true);
+      const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success('Reset code sent to your email!');
+        // Redirect to reset password verification page
+        navigate(`/reset-password-verify?email=${encodeURIComponent(email)}`);
+      } else {
+        toast.error(data.message || 'Failed to send reset code');
+      }
     } catch (err) {
       console.error('Reset password error:', err);
-      // Error is handled by the auth store
+      toast.error('Failed to send reset code. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  if (isSuccess) {
-    return (
-      <div className="min-h-screen bg-background-light flex items-center justify-center px-4">
-        <Card className="w-full max-w-md bg-background border-border-light shadow-md">
-          <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Mail className="w-8 h-8 text-green-600" />
-            </div>
-            <h1 className="text-2xl font-bold text-text-primary mb-4">Check your email</h1>
-            <p className="text-text-secondary mb-8">
-              We've sent a password reset link to <strong>{email}</strong>
-            </p>
-            <Link to="/login">
-              <Button variant="ghost" className="w-full">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Sign In
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background-light flex items-center justify-center px-4">
@@ -70,12 +64,8 @@ export function ResetPassword() {
               />
             </div>
 
-            {error && (
-              <p className="text-red-500 text-sm text-center">{error}</p>
-            )}
-
             <Button type="submit" className="w-full" size="lg" isLoading={isLoading}>
-              Send Reset Link
+              Send Reset Code
             </Button>
           </form>
 

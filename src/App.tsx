@@ -11,6 +11,8 @@ import { Pricing } from './pages/Pricing';
 import { Login } from './pages/auth/Login';
 import { Signup } from './pages/auth/Signup';
 import { ResetPassword } from './pages/auth/ResetPassword';
+import { EmailVerification } from './pages/auth/EmailVerification';
+import { ResetPasswordVerification } from './pages/auth/ResetPasswordVerification';
 import { Dashboard } from './pages/dashboard/Dashboard';
 import { Settings } from './pages/dashboard/Settings';
 
@@ -85,6 +87,16 @@ function AppContent() {
           <Route path="/reset-password" element={
             <PublicRoute>
               <ResetPassword />
+            </PublicRoute>
+          } />
+          <Route path="/verify-email" element={
+            <PublicRoute>
+              <EmailVerification />
+            </PublicRoute>
+          } />
+          <Route path="/reset-password-verify" element={
+            <PublicRoute>
+              <ResetPasswordVerification />
             </PublicRoute>
           } />
           
