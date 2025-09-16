@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Upload, Zap, Settings as SettingsIcon, Play } from 'lucide-react';
+import { Zap, Settings as SettingsIcon } from 'lucide-react';
 import { useAppStore } from '../../stores/appStore';
 import { Button } from '../../components/ui/Button';
 import { Card, CardContent, CardHeader } from '../../components/ui/Card';
+import LoadingOverlay from '../../components/ui/LoadingOverlay';
+import VideoPreview from '../../components/dashboard/VideoPreview';
+import QuickStats from '../../components/dashboard/QuickStats';
 
 export function Dashboard() {
   const { connectedPlatforms, addPost } = useAppStore();
@@ -11,6 +14,7 @@ export function Dashboard() {
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [publishType, setPublishType] = useState<'auto' | 'approval'>('approval');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generated, setGenerated] = useState<{ title: string; previewUrl?: string } | null>(null);
 
   const platforms = [
     { id: 'youtube', name: 'YouTube Shorts', color: 'bg-red-500' },
@@ -19,9 +23,10 @@ export function Dashboard() {
   ];
 
   const handleGenerate = async () => {
-    if (!prompt.trim() || selectedPlatforms.length === 0) return;
+    if (!prompt.trim()) return;
 
     setIsGenerating(true);
+    setGenerated(null);
     
     addPost({
       title: prompt.substring(0, 50) + (prompt.length > 50 ? '...' : ''),
@@ -33,38 +38,26 @@ export function Dashboard() {
     setPrompt('');
     setSelectedPlatforms([]);
     
+    // Simulate generation delay
     setTimeout(() => {
       setIsGenerating(false);
-    }, 2000);
+      setGenerated({
+        title: 'Generated preview',
+      });
+    }, 2200);
   };
 
-  if (connectedPlatforms.length === 0) {
-    return (
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-text-primary mb-8">Dashboard</h1>
-        
-        <Card className="text-center py-16">
-          <CardContent>
-            <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-6">
-              <SettingsIcon className="w-8 h-8 text-primary-600" />
-            </div>
-            <h2 className="text-2xl font-semibold text-text-primary mb-4">
-              Connect your social media accounts
-            </h2>
-            <p className="text-text-secondary mb-8 max-w-md mx-auto">
-              To start generating videos, you need to connect at least one social media platform.
-            </p>
-            <Link to="/dashboard/settings">
-              <Button size="lg">Connect Accounts</Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleGenerate();
+    }
+  };
+
+  // Always render the prompt UI. If no platforms are connected, we show a helper card
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8 relative">
       <div>
         <h1 className="text-3xl font-bold text-text-primary mb-2">Dashboard</h1>
         <p className="text-text-secondary">Create your next viral video with AI</p>
@@ -84,27 +77,13 @@ export function Dashboard() {
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Describe the video you want to create... (e.g., 'Create a motivational video about morning routines with upbeat music')"
               className="w-full px-4 py-3 border border-border rounded-lg shadow-sm placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-background text-text-primary resize-none"
               rows={4}
             />
           </div>
 
-          {/* File Upload */}
-          <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
-              Reference File (Optional)
-            </label>
-            <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary-500 transition-colors cursor-pointer bg-surface-light">
-              <Upload className="w-8 h-8 text-text-muted mx-auto mb-2" />
-              <p className="text-text-secondary">
-                Drop files here or <span className="text-primary-600">browse</span>
-              </p>
-              <p className="text-xs text-text-muted mt-1">
-                Support for articles, scripts, images (PDF, DOC, TXT, PNG, JPG)
-              </p>
-            </div>
-          </div>
 
           {/* Platform Selection */}
           <div>
@@ -183,7 +162,7 @@ export function Dashboard() {
           {/* Generate Button */}
           <Button
             onClick={handleGenerate}
-            disabled={!prompt.trim() || selectedPlatforms.length === 0 || isGenerating}
+            disabled={!prompt.trim() || isGenerating}
             className="w-full"
             size="lg"
             icon={isGenerating ? undefined : Zap}
@@ -194,50 +173,43 @@ export function Dashboard() {
         </CardContent>
       </Card>
 
+      {connectedPlatforms.length === 0 && (
+        <Card className="text-center">
+          <CardContent className="py-10">
+            <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <SettingsIcon className="w-6 h-6 text-primary-600" />
+            </div>
+            <p className="text-text-secondary mb-4">To publish automatically, connect at least one platform in Settings.</p>
+            <Link to="/dashboard/settings">
+              <Button size="sm">Open Settings</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Generated Preview */}
+      {generated && (
+        <Card>
+          <CardHeader>
+            <h2 className="text-xl font-semibold text-text-primary">Preview</h2>
+          </CardHeader>
+          <CardContent>
+            <VideoPreview title={generated.title} />
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Loading Overlay */}
+      <LoadingOverlay
+        show={isGenerating}
+        message="Generating your video"
+        subMessage="Synthesizing visuals, polishing voiceover, mixing soundtrack"
+        fullscreen={false}
+        className="rounded-xl"
+      />
+
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-text-secondary">Videos Generated</p>
-                <p className="text-2xl font-bold text-text-primary">24</p>
-              </div>
-              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                <Play className="w-6 h-6 text-primary-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-text-secondary">This Month</p>
-                <p className="text-2xl font-bold text-text-primary">12</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-text-secondary">Connected Platforms</p>
-                <p className="text-2xl font-bold text-text-primary">{connectedPlatforms.length}</p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <SettingsIcon className="w-6 h-6 text-purple-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <QuickStats videosGenerated={24} thisMonth={12} connectedPlatforms={connectedPlatforms.length} />
     </div>
   );
 }

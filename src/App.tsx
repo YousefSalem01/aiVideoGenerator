@@ -15,6 +15,9 @@ import { EmailVerification } from './pages/auth/EmailVerification';
 import { ResetPasswordVerification } from './pages/auth/ResetPasswordVerification';
 import { Dashboard } from './pages/dashboard/Dashboard';
 import { Settings } from './pages/dashboard/Settings';
+import { Posts } from './pages/dashboard/Posts';
+import { Scheduling } from './pages/dashboard/Scheduling';
+import { Billing } from './pages/dashboard/Billing';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuthStore();
@@ -106,27 +109,12 @@ function AppContent() {
             </ProtectedRoute>
           }>
             <Route index element={<Dashboard />} />
-            <Route path="posts" element={
-              <div className="text-center py-16">
-                <h2 className="text-2xl font-bold text-text-primary mb-4">My Posts</h2>
-                <p className="text-text-secondary">Your generated videos will appear here.</p>
-              </div>
-            } />
-            <Route path="scheduling" element={
-              <div className="text-center py-16">
-                <h2 className="text-2xl font-bold text-text-primary mb-4">Scheduling</h2>
-                <p className="text-text-secondary">Schedule multiple videos at once.</p>
-              </div>
-            } />
+            <Route path="posts" element={<Posts />} />
+            <Route path="scheduling" element={<Scheduling />} />
             <Route path="settings" element={
               <Settings />
             } />
-            <Route path="billing" element={
-              <div className="text-center py-16">
-                <h2 className="text-2xl font-bold text-text-primary mb-4">Billing</h2>
-                <p className="text-text-secondary">Manage your subscription and billing details.</p>
-              </div>
-            } />
+            <Route path="billing" element={<Billing />} />
           </Route>
           
           <Route path="/admin/users" element={
