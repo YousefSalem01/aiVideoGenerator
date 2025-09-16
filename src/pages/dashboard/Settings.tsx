@@ -18,7 +18,7 @@ import { useAppStore } from '../../stores/appStore';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent, CardHeader } from '../../components/ui/Card';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toast } from '../../components/ui/Toast';
 
 export function Settings() {
   const { connectedPlatforms, connectPlatform, disconnectPlatform } = useAppStore();
@@ -77,7 +77,7 @@ export function Settings() {
   const handleConnect = (platformId: string, platformName: string, isConnected: boolean) => {
     if (isConnected) {
       disconnectPlatform(platformId);
-      toast.success(`Disconnected from ${platformName}`, {
+      Toast.success(`Disconnected from ${platformName}`, {
         style: {
           background: '#ffffff',
           color: '#374151',
@@ -86,16 +86,12 @@ export function Settings() {
       });
     } else {
       connectPlatform(platformId);
-      toast.success(`Connected to ${platformName}! 🚀`, {
+      Toast.success(`Connected to ${platformName}! 🚀`, {
         duration: 4000,
         style: {
           background: '#ffffff',
           color: '#374151',
           border: '1px solid #e5e7eb',
-        },
-        iconTheme: {
-          primary: '#2563eb',
-          secondary: '#ffffff',
         },
       });
     }
@@ -103,7 +99,7 @@ export function Settings() {
 
   const handleNotificationChange = (key: string, value: boolean) => {
     setNotifications(prev => ({ ...prev, [key]: value }));
-    toast.success('Notification preferences updated!', {
+    Toast.success('Notification preferences updated!', {
       style: {
         background: '#ffffff',
         color: '#374151',
@@ -114,8 +110,6 @@ export function Settings() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
-      <Toaster position="top-right" />
-      
       <div className="flex items-center space-x-3 mb-8">
         <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
           <SettingsIcon className="w-5 h-5 text-primary-600" />

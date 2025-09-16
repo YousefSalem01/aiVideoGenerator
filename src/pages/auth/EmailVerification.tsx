@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Mail, ArrowLeft, RefreshCw } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card, CardContent } from '../../components/ui/Card';
 import { VerificationCodeInput } from '../../components/ui/VerificationCodeInput';
-import { useAuthStore } from '../../stores/authStore';
-import toast from 'react-hot-toast';
+import { Toast } from '../../components/ui/Toast';
+import { tokenManager } from '../../lib/api';
 
 export function EmailVerification() {
   const [code, setCode] = useState('');
@@ -14,7 +14,6 @@ export function EmailVerification() {
   const [resendCooldown, setResendCooldown] = useState(0);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { login } = useAuthStore();
 
   const tempUserId = searchParams.get('userId');
   const email = searchParams.get('email');
@@ -54,19 +53,19 @@ export function EmailVerification() {
       const data = await response.json();
 
       if (data.success) {
-        // Store tokens and user data
-        localStorage.setItem('auth_token', data.data.token);
-        localStorage.setItem('refresh_token', data.data.refreshToken);
+        // Store tokens using cookie-based token manager
+        tokenManager.setToken(data.data.token);
+        tokenManager.setRefreshToken(data.data.refreshToken);
         
-        toast.success('Email verified successfully! Welcome!');
+        Toast.success('Email verified successfully! Welcome!');
         navigate('/dashboard');
       } else {
-        toast.error(data.message || 'Invalid verification code');
+        Toast.error(data.message || 'Invalid verification code');
         setCode('');
       }
     } catch (error) {
       console.error('Verification error:', error);
-      toast.error('Failed to verify email. Please try again.');
+      Toast.error('Failed to verify email. Please try again.');
       setCode('');
     } finally {
       setIsVerifying(false);
@@ -91,14 +90,14 @@ export function EmailVerification() {
       const data = await response.json();
 
       if (data.success) {
-        toast.success('Verification code sent to your email');
+        Toast.success('Verification code sent to your email');
         setResendCooldown(60); // 60 seconds cooldown
       } else {
-        toast.error(data.message || 'Failed to resend code');
+        Toast.error(data.message || 'Failed to resend code');
       }
     } catch (error) {
       console.error('Resend error:', error);
-      toast.error('Failed to resend code. Please try again.');
+      Toast.error('Failed to resend code. Please try again.');
     } finally {
       setIsResending(false);
     }

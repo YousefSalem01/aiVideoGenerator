@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+import { ToastContainer } from './components/ui/Toast';
 import { useAuthStore } from './stores/authStore';
-import { useAuthInit } from './hooks/useAuthInit';
+import { useAuthInit } from './hooks/useAuth';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { DashboardLayout } from './components/layout/DashboardLayout';
@@ -159,17 +159,7 @@ function App() {
   return (
     <>
       <AppContent />
-      <Toaster 
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: '#ffffff',
-            color: '#374151',
-            border: '1px solid #e5e7eb',
-          },
-        }}
-      />
+      <ToastContainer />
     </>
   );
 }

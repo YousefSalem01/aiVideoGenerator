@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import toast from 'react-hot-toast';
+import { Toast } from '../components/ui/Toast';
 import { authAPI, tokenManager, User } from '../lib/api';
 
 interface ApiError {
@@ -49,7 +49,7 @@ export const useAuthStore = create<AuthState>()(
               error: null 
             });
             
-            toast.success('Welcome back!');
+            Toast.success('Welcome back!');
           } else {
             throw new Error(response.message || 'Login failed');
           }
@@ -81,7 +81,7 @@ export const useAuthStore = create<AuthState>()(
               error: null 
             });
             
-            toast.success(`Welcome to AI VideoGen, ${response.data.user.name}!`);
+            Toast.success(`Welcome to AI VideoGen, ${response.data.user.name}!`);
           } else {
             throw new Error(response.message || 'Registration failed');
           }
@@ -105,7 +105,7 @@ export const useAuthStore = create<AuthState>()(
         } finally {
           tokenManager.clearAll();
           set({ user: null, error: null });
-          toast.success('Logged out successfully');
+          Toast.success('Logged out successfully');
         }
       },
 
@@ -116,7 +116,7 @@ export const useAuthStore = create<AuthState>()(
           await authAPI.forgotPassword(email);
           
           set({ isLoading: false });
-          toast.success('Password reset email sent! Check your inbox.');
+          Toast.success('Password reset email sent! Check your inbox.');
         } catch (error: unknown) {
           const apiError = error as ApiError;
           const errorMessage = apiError.response?.data?.message || apiError.message || 'Password reset failed';

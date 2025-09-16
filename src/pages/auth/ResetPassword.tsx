@@ -4,7 +4,7 @@ import { Mail, ArrowLeft } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent } from '../../components/ui/Card';
-import toast from 'react-hot-toast';
+import { Toast } from '../../components/ui/Toast';
 
 export function ResetPassword() {
   const [email, setEmail] = useState('');
@@ -27,15 +27,15 @@ export function ResetPassword() {
       const data = await response.json();
 
       if (data.success) {
-        toast.success('Reset code sent to your email!');
+        Toast.success('Reset code sent to your email!');
         // Redirect to reset password verification page
         navigate(`/reset-password-verify?email=${encodeURIComponent(email)}`);
       } else {
-        toast.error(data.message || 'Failed to send reset code');
+        Toast.error(data.message || 'Failed to send reset code');
       }
     } catch (err) {
       console.error('Reset password error:', err);
-      toast.error('Failed to send reset code. Please try again.');
+      Toast.error('Failed to send reset code. Please try again.');
     } finally {
       setIsLoading(false);
     }

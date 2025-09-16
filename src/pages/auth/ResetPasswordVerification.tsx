@@ -6,7 +6,8 @@ import { Input } from '../../components/ui/Input';
 import { Card, CardContent } from '../../components/ui/Card';
 import { VerificationCodeInput } from '../../components/ui/VerificationCodeInput';
 import { useAuthStore } from '../../stores/authStore';
-import toast from 'react-hot-toast';
+import { tokenManager } from '../../lib/api';
+import { Toast } from '../../components/ui/Toast';
 
 export function ResetPasswordVerification() {
   const [step, setStep] = useState<'code' | 'password'>('code');
@@ -17,6 +18,7 @@ export function ResetPasswordVerification() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [hasVerified, setHasVerified] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -29,7 +31,7 @@ export function ResetPasswordVerification() {
   }, [email, navigate]);
 
   const handleVerifyCode = async (verificationCode: string) => {
-    if (!email) return;
+    if (!email || isVerifying || hasVerified) return;
 
     setIsVerifying(true);
     try {
@@ -48,16 +50,19 @@ export function ResetPasswordVerification() {
       const data = await response.json();
 
       if (data.success) {
-        toast.success('Code verified! Now set your new password.');
+        setHasVerified(true);
+        Toast.success('Code verified! Now set your new password.');
         setStep('password');
       } else {
-        toast.error(data.message || 'Invalid verification code');
+        Toast.error(data.message || 'Invalid verification code');
         setCode('');
+        setHasVerified(false);
       }
     } catch (error) {
       console.error('Code verification error:', error);
-      toast.error('Failed to verify code. Please try again.');
+      Toast.error('Failed to verify code. Please try again.');
       setCode('');
+      setHasVerified(false);
     } finally {
       setIsVerifying(false);
     }
@@ -69,12 +74,12 @@ export function ResetPasswordVerification() {
     if (!email || !code) return;
 
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
+      Toast.warn('Passwords do not match');
       return;
     }
 
     if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+      Toast.warn('Password must be at least 6 characters');
       return;
     }
 
@@ -95,18 +100,20 @@ export function ResetPasswordVerification() {
       const data = await response.json();
 
       if (data.success) {
-        // Store tokens and user data
-        localStorage.setItem('auth_token', data.data.token);
-        localStorage.setItem('refresh_token', data.data.refreshToken);
+        const { setUser } = useAuthStore.getState();
         
-        toast.success('Password reset successfully! You are now logged in.');
+        tokenManager.setToken(data.data.token);
+        tokenManager.setRefreshToken(data.data.refreshToken);
+        setUser(data.data.user);
+        
+        Toast.success('Password reset successfully! You are now logged in.');
         navigate('/dashboard');
       } else {
-        toast.error(data.message || 'Failed to reset password');
+        Toast.error(data.message || 'Failed to reset password');
       }
     } catch (error) {
       console.error('Password reset error:', error);
-      toast.error('Failed to reset password. Please try again.');
+      Toast.error('Failed to reset password. Please try again.');
     } finally {
       setIsResetting(false);
     }
@@ -244,7 +251,10 @@ export function ResetPasswordVerification() {
                   <Button
                     type="button"
                     variant="ghost"
-                    onClick={() => setStep('code')}
+                    onClick={() => {
+                      setStep('code');
+                      setHasVerified(false);
+                    }}
                     className="w-full text-text-secondary hover:text-text-primary"
                   >
                     <ArrowLeft className="w-4 h-4 mr-2" />

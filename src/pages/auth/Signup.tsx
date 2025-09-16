@@ -4,7 +4,7 @@ import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent } from '../../components/ui/Card';
-import toast from 'react-hot-toast';
+import { Toast } from '../../components/ui/Toast';
 
 export function Signup() {
   const [name, setName] = useState('');
@@ -18,7 +18,7 @@ export function Signup() {
     e.preventDefault();
 
     if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+      Toast.warn('Password must be at least 6 characters');
       return;
     }
 
@@ -35,15 +35,15 @@ export function Signup() {
       const data = await response.json();
 
       if (data.success) {
-        toast.success('Verification code sent to your email!');
+        Toast.success('Verification code sent to your email!');
         // Redirect to email verification with user ID and email
         navigate(`/verify-email?userId=${data.data.tempUserId}&email=${encodeURIComponent(email)}`);
       } else {
-        toast.error(data.message || 'Registration failed');
+        Toast.error(data.message || 'Registration failed');
       }
     } catch (error) {
       console.error('Signup error:', error);
-      toast.error('Registration failed. Please try again.');
+      Toast.error('Registration failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
